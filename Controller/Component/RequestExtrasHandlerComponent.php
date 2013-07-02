@@ -15,7 +15,24 @@
  * @author Kim Stacks <kim@stacktogether.com>
  * @license http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+App::uses('Component', 'Controller');
 class RequestExtrasHandlerComponent extends Component {
+
+/**
+ * Behavior settings
+ *
+ * @access public
+ * @var array
+ */
+	public $settings = array();
+
+/**
+ * Cake Controller
+ *
+ * @access public
+ * @var array
+ */
+	public $controller = null;
 
 /**
  * Initialize function
@@ -24,17 +41,16 @@ class RequestExtrasHandlerComponent extends Component {
  * @param controller object $controller
  * @param array $settings
  */
-	public function initialize($controller) {
-		$settings = $this->settings;
+	public function initialize(Controller $controller) {
+		$this->controller = $controller;
 	}
 
 /**
- * check admin_edit, admin_delete, admin_view, admin_toggle for the $id
- * see if current user has permissions for this $id
  *
  * @param controller object $controller 
  */
-	public function startup($controller) {
+	public function startup(Controller $controller) {
+		$this->controller = $controller;
 	}
 
 /**
@@ -46,9 +62,9 @@ class RequestExtrasHandlerComponent extends Component {
  * @return boolean
  */
 	public function matchSubdomain($subdomain, $options = array()) {
-		$subdomains = $this->request->subdomains();
+		$subdomains = $this->controller->request->subdomains();
 		$matches = preg_grep( "/$subdomain/i" , $subdomains );
-		$matched = count($matches > 0);
+		$matched = (count($matches) > 0);
 		return $matched;
 	}
 }
