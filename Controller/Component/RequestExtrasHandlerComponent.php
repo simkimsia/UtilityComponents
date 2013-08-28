@@ -67,4 +67,30 @@ class RequestExtrasHandlerComponent extends Component {
 		$matched = (count($matches) > 0);
 		return $matched;
 	}
+
+/**
+ *
+ * remove Query Parameters and return the relative url without the removed Query parameters
+ * does not yet work with passed params, named params, and shebang #
+ *
+ * @param $parameters Array of parameters to be removed
+ * @return string
+ */
+	public function removeQueryParameters($parameters) {
+		$here = $this->controller->request->here;
+		$named = $this->controller->request->params['named'];
+		$query = $this->controller->request->query;
+		$passed = $this->controller->request->params['passed'];
+		$queryString = '';
+		foreach($query as $param=>$value) {
+			if (!in_array($param, $parameters)) {
+				$queryString .= $param . '=' . $value . '&';
+			}
+		}
+
+		if (strlen($queryString) > 0) {
+			$queryString = substr($queryString, 0, strlen($queryString) - 1);
+		}
+		return $here . '?' . $queryString;
+	}
 }
