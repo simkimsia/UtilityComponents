@@ -91,6 +91,9 @@ class RequestExtrasHandlerComponent extends Component {
 		if (strlen($queryString) > 0) {
 			$queryString = substr($queryString, 0, strlen($queryString) - 1);
 		}
-		return $here . '?' . $queryString;
+		if (strlen($queryString) > 0) {
+			$queryString = '?' . $queryString;
+		}
+		return $here . $queryString;
 	}
 }
