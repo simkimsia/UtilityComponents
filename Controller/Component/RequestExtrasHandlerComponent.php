@@ -16,6 +16,7 @@
  * @license http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 App::uses('Component', 'Controller');
+App::uses('ArrayLib', 'UtilityLib.Lib');
 class RequestExtrasHandlerComponent extends Component {
 
 /**
@@ -33,6 +34,14 @@ class RequestExtrasHandlerComponent extends Component {
  * @var array
  */
 	public $controller = null;
+
+/**
+ * a library of the most common useragents
+ */
+	public $userAgents = array(
+		'facebook' => array('env' => 'HTTP_USER_AGENT', 'pattern' => '/facebook/i'),
+		'iphone' => array('env' => 'HTTP_USER_AGENT', 'pattern' => '/iPhone/i')
+	);
 
 /**
  * Initialize function
@@ -95,5 +104,32 @@ class RequestExtrasHandlerComponent extends Component {
 			$queryString = '?' . $queryString;
 		}
 		return $here . $queryString;
+	}
+
+/**
+ * retrieve a select list of User-Agent detectors
+ *
+ * @param $agentsWanted Array. A list of user-agent detectors to retrieve. If nothing is supplied, return the entire default list of user-agent detectors.
+ * @return array
+ */
+	public function getUserAgentDetectors($agentsWanted = array()) {
+		if (empty($agentsWanted)) {
+			return $this->userAgents;
+		}
+		$retrievedAgents = ArrayLib::extractIfKeysExist($this->userAgents, $agentsWanted);
+		return $retrievedAgents;
+	}
+
+/**
+ * add an array of detectors to the current CakeRequest
+ *
+ * @param $request CakeRequest
+ * @param $detectors Array. Keys are the detector names. Values will be the detector value
+ * @return void
+ */
+	public function addDetectorsToRequest(CakeRequest $request, $detectors = array()) {
+		foreach($detectors as $detectorName => $detector) {
+			$request->addDetector($detectorName, $detector);
+		}
 	}
 }
