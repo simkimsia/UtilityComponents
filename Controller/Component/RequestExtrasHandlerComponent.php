@@ -80,17 +80,17 @@ class RequestExtrasHandlerComponent extends Component {
 /**
  *
  * remove Query Parameters and return the relative url without the removed Query parameters
- * does not yet work with passed params, named params, and shebang #
+ * this will work even if there are named parameters and passed parameters because 
+ * this->controller->request->here is the generated from Router::url which took care of the
+ * passed and named parameters.
  *
  * @param $parameters Array of parameters to be removed
  * @return string
  */
 	public function removeQueryParameters($parameters) {
-		$here = $this->controller->request->here;
-		$named = $this->controller->request->params['named'];
-		$query = $this->controller->request->query;
-		$passed = $this->controller->request->params['passed'];
-		$queryString = '';
+		$here		= $this->controller->request->here;
+		$query		= $this->controller->request->query;
+		$queryString	= '';
 		foreach($query as $param=>$value) {
 			if (!in_array($param, $parameters)) {
 				$queryString .= $param . '=' . $value . '&';
@@ -104,6 +104,19 @@ class RequestExtrasHandlerComponent extends Component {
 			$queryString = '?' . $queryString;
 		}
 		return $here . $queryString;
+	}
+
+/**
+ *
+ * remove Named Parameters and return the relative url without the removed Named parameters
+ * this should work even if there are query parameters and passed parameters because 
+ * we are going to use Router::url to reconstruct the url by passing in all the parameters 
+ * except the removed Named Parameters
+ *
+ * @param $parameters Array of parameters to be removed
+ * @return string
+ */
+	public function removeNamedParameters($parameters) {
 	}
 
 /**
