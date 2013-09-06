@@ -81,42 +81,69 @@ class RequestExtrasHandlerComponent extends Component {
  *
  * remove Query Parameters and return the relative url without the removed Query parameters
  * this will work even if there are named parameters and passed parameters because 
- * this->controller->request->here is the generated from Router::url which took care of the
- * passed and named parameters.
+ * this->controller->request->here is the a string that automatically included the passed and named parameters.
  *
  * @param $parameters Array of parameters to be removed
  * @return string
  */
-	public function removeQueryParameters($parameters) {
-		$here		= $this->controller->request->here;
-		$query		= $this->controller->request->query;
-		$queryString	= '';
+	public function removeQueryParameters($parameters, $here = '') {
+		if (empty($here)) {
+			$here		= $this->controller->request->here;
+		}
+		$query			= $this->controller->request->query;
+		$validQueryParameters	= array();
+
 		foreach($query as $param=>$value) {
 			if (!in_array($param, $parameters)) {
-				$queryString .= $param . '=' . $value . '&';
+				$validQueryParameters[$param] = $value;
 			}
+		}
+
+		$queryString = $this->_reconstructQueryString($validQueryParameters);
+
+		return $here . $queryString;
+	}
+
+	protected function _reconstructQueryString($queryParameters = array()) {
+		$queryString = '';
+		foreach($queryParameters as $param => $value) {
+			$queryString .= $param . '=' . $value . '&';
 		}
 
 		if (strlen($queryString) > 0) {
 			$queryString = substr($queryString, 0, strlen($queryString) - 1);
-		}
-		if (strlen($queryString) > 0) {
 			$queryString = '?' . $queryString;
 		}
-		return $here . $queryString;
+		return $queryString;
 	}
 
 /**
  *
  * remove Named Parameters and return the relative url without the removed Named parameters
- * this should work even if there are query parameters and passed parameters because 
- * we are going to use Router::url to reconstruct the url by passing in all the parameters 
- * except the removed Named Parameters
+ * this will work because we simply use search and replace on 
+ * this->controller->request->here which contains the named and passed parameters
  *
  * @param $parameters Array of parameters to be removed
  * @return string
  */
-	public function removeNamedParameters($parameters) {
+	public function removeNamedParameters($parameters, $here = '') {
+		if (empty($here)) {
+			$here	= $this->controller->request->here;
+		}
+		$query		= $this->controller->request->query;
+		$named		= $this->controller->request->params['named'];
+
+		$newHere	= $here;
+		foreach($named as $param=>$value) {
+			if (in_array($param, $parameters)) {
+				$namedString = $param . ':' . $value;
+				$newHere = str_replace($namedString, "", $newHere);
+			}
+		}
+
+		$queryString = $this->_reconstructQueryString($query);
+
+		return $newHere . $queryString;
 	}
 
 /**
