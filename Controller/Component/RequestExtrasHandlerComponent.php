@@ -167,7 +167,7 @@ class RequestExtrasHandlerComponent extends Component {
  * @param $request CakeRequest. This will be passed by reference
  * @return void
  */
-	public function addAjaxMethodDetectors(CakeRequest $request) {
+	public function addAjaxMethodDetectorsTo(CakeRequest $request) {
 		// the 4 method detectors for ajax calls
 		$request->addDetector('ajax_get', array('callback' => function ($request) {
 			return ($request->is('ajax') && $request->is('get'));
@@ -194,6 +194,7 @@ class RequestExtrasHandlerComponent extends Component {
 		$request->addDetector('nonajax_delete', array('callback' => function ($request) {
 			return (!$request->is('ajax') && $request->is('delete'));
 		}));
+		return $request;
 	}
 
 /**
