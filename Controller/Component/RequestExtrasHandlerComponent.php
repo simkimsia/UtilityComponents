@@ -161,6 +161,42 @@ class RequestExtrasHandlerComponent extends Component {
 	}
 
 /**
+ * add 4 standard request method detectors for ajax calls
+ * add 4 standard request method detectors for nonajax calls
+ *
+ * @param $request CakeRequest. THis will be passed by reference
+ * @return void
+ */
+	public function addAjaxMethodDetectors(CakeRequest $request) {
+		// the 4 method detectors
+		$request->addDetector('ajax_get', array('callback' => function ($request) {
+			return ($request->is('ajax') && $request->is('get'));
+		}));
+		$request->addDetector('ajax_post', array('callback' => function ($request) {
+			return ($request->is('ajax') && $request->is('post'));
+		}));
+		$request->addDetector('ajax_put', array('callback' => function ($request) {
+			return ($request->is('ajax') && $request->is('put'));
+		}));
+		$request->addDetector('ajax_delete', array('callback' => function ($request) {
+			return ($request->is('ajax') && $request->is('delete'));
+		}));
+
+		$request->addDetector('nonajax_get', array('callback' => function ($request) {
+			return (!$request->is('ajax') && $request->is('get'));
+		}));
+		$request->addDetector('nonajax_post', array('callback' => function ($request) {
+			return (!$request->is('ajax') && $request->is('post'));
+		}));
+		$request->addDetector('nonajax_put', array('callback' => function ($request) {
+			return (!$request->is('ajax') && $request->is('put'));
+		}));
+		$request->addDetector('nonajax_delete', array('callback' => function ($request) {
+			return (!$request->is('ajax') && $request->is('delete'));
+		}));
+	}
+
+/**
  * add an array of detectors to the current CakeRequest
  *
  * @param $request CakeRequest
