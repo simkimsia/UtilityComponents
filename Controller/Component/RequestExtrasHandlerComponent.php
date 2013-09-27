@@ -165,7 +165,7 @@ class RequestExtrasHandlerComponent extends Component {
  * add 4 standard request method detectors for nonajax calls
  *
  * @param $request CakeRequest. This will be passed by reference
- * @return void
+ * @return CakeRequest. Just in case caller did not know that the CakeRequest object was passed by reference
  */
 	public function addAjaxMethodDetectorsTo(CakeRequest $request) {
 		// the 4 method detectors for ajax calls
