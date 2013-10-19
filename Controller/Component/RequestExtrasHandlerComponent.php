@@ -13,7 +13,12 @@
  * @copyright Copyright 2013, Kim Stacks.
  * @link http://stacktogether.com
  * @author Kim Stacks <kim@stacktogether.com>
+ * @package UtilityComponents
+ * @subpackage UtilityComponents.Controller.Component
+ * @filesource
+ * @version 0.1
  * @license http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @lastmodified 2013-09-28
  */
 App::uses('Component', 'Controller');
 App::uses('ArrayLib', 'UtilityLib.Lib');
