@@ -156,4 +156,38 @@ class RedirectComponentTest extends CakeTestCase {
 		// @TODO dunno how to make the $this->Controller->Session correctly get influenced with the same value.
 		// AND we expect the Session to still have that value under the key Redirect.RedirectModels.beforeEdit
 	}
+
+/**
+ * Test that the constructor sets the settings.
+ *
+ * @return void
+ */
+	public function testGetRefererBeforeEditWithUnderscores() {
+		// GIVEN we set the referer as /posts/index
+		$request = $this->getMock('CakeRequest');
+
+		$request->expects($this->any())->method('referer')
+			->with(false)
+			->will($this->returnValue('/redirect_models/edit'));
+
+		$this->Controller = new RedirectTestController($request, $this->getMock('CakeResponse'));
+
+		$this->Controller->Components->init($this->Controller);
+
+		// AND we initialize the component with the controller
+		$this->Controller->Redirect->initialize($this->Controller);
+
+		// AND the component is successfully started up
+		$this->assertTrue($this->Controller->Redirect->startup($this->Controller));
+
+		// WHEN we run the getRefererBeforeEdit without first setting any session values
+		$referer = $this->Controller->Redirect->getRefererBeforeEdit();
+
+		// THEN we expect the following values 
+		$expected = '/redirect_models/edit';
+		$this->assertEquals($expected, $referer);
+
+		// @TODO dunno how to make the $this->Controller->Session correctly get influenced with the same value.
+		// AND we expect the Session to still have that value under the key Redirect.RedirectModels.beforeEdit
+	}
 }

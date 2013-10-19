@@ -103,13 +103,17 @@ class RedirectComponent extends Component {
  * @return boolean
  */
 	public function getRefererBeforeEdit($options = array()) {
-		$controllerName = $this->controller->name;
+		$controllerName				= $this->controller->name;
+		$controllerNameUnderscore	= Inflector::underscore($controllerName);
 		$referer = $this->controller->referer();
-		$beforeEdit = (strpos($referer, "$controllerName/edit") === false);
+		$beforeEdit = (strpos($referer, "$controllerName/edit") === false) || (strpos($referer, "$controllerNameUnderscore/edit") === false);
 		if ($beforeEdit) {
 			$this->controller->Session->write("RedirectComponent.$controllerName.beforeEdit", $referer);
 		} else {
-			$referer = $this->controller->Session->read("RedirectComponent.$controllerName.beforeEdit");
+			$refererFromSession = $this->controller->Session->read("RedirectComponent.$controllerName.beforeEdit");
+			if (!empty($refererFromSession)) {
+				$referer = $refererFromSession;
+			}
 		}
 		return $referer;
 	}
