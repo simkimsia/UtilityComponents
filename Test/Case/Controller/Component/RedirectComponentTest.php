@@ -162,13 +162,13 @@ class RedirectComponentTest extends CakeTestCase {
  *
  * @return void
  */
-	public function testGetRefererBeforeEditWithUnderscores() {
+	public function testGetRefererBeforeEditWithUnderscoresCaseInsensitive() {
 		// GIVEN we set the referer as /posts/index
 		$request = $this->getMock('CakeRequest');
 
 		$request->expects($this->any())->method('referer')
 			->with(false)
-			->will($this->returnValue('/redirect_models/edit'));
+			->will($this->returnValue('/Redirect_models/edit'));
 
 		$this->Controller = new RedirectTestController($request, $this->getMock('CakeResponse'));
 
@@ -184,7 +184,7 @@ class RedirectComponentTest extends CakeTestCase {
 		$referer = $this->Controller->Redirect->getRefererBeforeEdit();
 
 		// THEN we expect the following values 
-		$expected = '/redirect_models/edit';
+		$expected = '/Redirect_models/edit';
 		$this->assertEquals($expected, $referer);
 
 		// @TODO dunno how to make the $this->Controller->Session correctly get influenced with the same value.

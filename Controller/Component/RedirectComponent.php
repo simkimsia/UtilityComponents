@@ -106,7 +106,7 @@ class RedirectComponent extends Component {
 		$controllerName				= $this->controller->name;
 		$controllerNameUnderscore	= Inflector::underscore($controllerName);
 		$referer = $this->controller->referer();
-		$beforeEdit = (strpos($referer, "$controllerName/edit") === false) || (strpos($referer, "$controllerNameUnderscore/edit") === false);
+		$beforeEdit = (stripos($referer, "$controllerName/edit") === false) || (stripos($referer, "$controllerNameUnderscore/edit") === false);
 		if ($beforeEdit) {
 			$this->controller->Session->write("RedirectComponent.$controllerName.beforeEdit", $referer);
 		} else {
