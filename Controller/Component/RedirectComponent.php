@@ -11,7 +11,7 @@
 		$referer = $this->referer();
 		$beforeEdit = (strpos($referer, "batches/edit") === false);
 		if ($beforeEdit) {
-			$referer = $this->Session->write('Batches.beforeEdit', $referer);
+			$this->Session->write('Batches.beforeEdit', $referer);
 		} else {
 			$referer = $this->Session->read('Batches.beforeEdit');
 		}
@@ -91,6 +91,7 @@ class RedirectComponent extends Component {
  */
 	public function startup(Controller $controller) {
 		$this->controller = $controller;
+		return true;
 	}
 
 /**
@@ -104,11 +105,11 @@ class RedirectComponent extends Component {
 	public function getRefererBeforeEdit($options = array()) {
 		$controllerName = $this->controller->name;
 		$referer = $this->controller->referer();
-		$beforeEdit = (strpos($referer, "$name/edit") === false);
+		$beforeEdit = (strpos($referer, "$controllerName/edit") === false);
 		if ($beforeEdit) {
-			$referer = $this->controller->Session->write("RedirectComponent.$name.beforeEdit", $referer);
+			$this->controller->Session->write("RedirectComponent.$controllerName.beforeEdit", $referer);
 		} else {
-			$referer = $this->controller->Session->read("RedirectComponent.$name.beforeEdit");
+			$referer = $this->controller->Session->read("RedirectComponent.$controllerName.beforeEdit");
 		}
 		return $referer;
 	}
